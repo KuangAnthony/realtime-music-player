@@ -16,3 +16,18 @@ model Session {
   queue        String[]
   isPlaying    Boolean
 }
+
+model Message {
+  id         String   @unique
+  created_at DateTime @default(now())
+  from       String
+  session    String
+  content    String
+  version    BigInt
+  order      BigInt
+}
+
+model ReplicacheClient {
+  id               String @unique
+  last_mutation_id BigInt
+}

@@ -1,3 +1,4 @@
+import { NextApiRequest, NextApiResponse } from 'next';
 import { ReadonlyJSONValue } from 'replicache';
 import prisma from '../../lib/prisma';
 
@@ -21,9 +22,9 @@ type Mutation = {
   args: CreateMsgBody | ReadonlyJSONValue;
 };
 
-export default async (req, res) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
   const push = req.body as PushRequest;
-  console.log('Processing push', JSON.stringify(push));
+  console.log("Processing push", JSON.stringify(push));
 
   const t0 = Date.now();
   try {
@@ -32,7 +33,7 @@ export default async (req, res) => {
     const { nextval: version } = v[0] as { nextval: number };
     let lastMutationID = await getLastMutationID(push.clientID);
 
-    console.log('version', version, 'lastMutationID:', lastMutationID);
+    console.log("version", version, "lastMutationID:", lastMutationID);
 
     for (const mutation of push.mutations) {
       const t1 = Date.now();
@@ -49,10 +50,10 @@ export default async (req, res) => {
         break;
       }
 
-      console.log('Processing mutation:', JSON.stringify(mutation));
+      console.log("Processing mutation:", JSON.stringify(mutation));
 
       switch (mutation.name) {
-        case 'createMessage':
+        case "createMessage":
           await createMessage(mutation.args as CreateMsgBody, version);
           break;
         default:
@@ -60,13 +61,13 @@ export default async (req, res) => {
       }
 
       lastMutationID = expectedMutationID;
-      console.log('Processed mutation in', Date.now() - t1);
+      console.log("Processed mutation in", Date.now() - t1);
     }
 
     console.log(
-      'setting',
+      "setting",
       push.clientID,
-      'last_mutation_id to',
+      "last_mutation_id to",
       lastMutationID
     );
 
@@ -78,16 +79,16 @@ export default async (req, res) => {
         last_mutation_id: lastMutationID,
       },
     });
-    res.send('{}');
+    res.send("{}");
 
     // We need to await here otherwise, Next.js will frequently kill the request
     // and the poke won't get sent.
     await sendPoke();
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
     res.status(500).send(e.toString());
   } finally {
-    console.log('Processed push in', Date.now() - t0);
+    console.log("Processed push in", Date.now() - t0);
   }
 };
 

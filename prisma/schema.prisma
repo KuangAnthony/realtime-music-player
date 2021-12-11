@@ -9,10 +9,11 @@ datasource db {
 
 model Session {
   id           String   @id @default(uuid())
+  password     String
   created_at   DateTime @default(now())
   owner        String
   joined_users String[]
-  current_song String
+  current_song String?
   queue        String[]
   isPlaying    Boolean
 }

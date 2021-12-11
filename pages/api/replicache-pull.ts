@@ -1,6 +1,7 @@
+import { NextApiRequest, NextApiResponse } from 'next';
 import prisma from '../../lib/prisma';
 
-export default async (req, res) => {
+export default async (req: NextApiRequest, res: NextApiResponse) => {
   const pull = req.body;
   console.log(`Processing pull`, JSON.stringify(pull));
   const t0 = Date.now();
@@ -60,7 +61,7 @@ export default async (req, res) => {
       patch,
     });
     res.end();
-  } catch (e) {
+  } catch (e: any) {
     console.error(e);
     res.status(500).send(e.toString());
   } finally {

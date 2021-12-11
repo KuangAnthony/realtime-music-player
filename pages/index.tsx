@@ -1,12 +1,23 @@
 import { Button, chakra, Container, Flex, Input, Text } from "@chakra-ui/react";
 import type { NextPage } from "next";
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 const Home: NextPage = () => {
   const [sessionId, setSessionId] = useState("");
   const [sessionPassword, setSessionPassword] = useState("");
   const [username, setUsername] = useState("");
+  const router = useRouter();
+
+  useEffect(() => {
+    if (router.query.id) {
+      setSessionId(router.query.id as string);
+    }
+    if (router.query.password) {
+      setSessionPassword(router.query.password as string);
+    }
+  }, [router.query]);
 
   return (
     <Container>

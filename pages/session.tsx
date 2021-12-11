@@ -3,6 +3,7 @@ import { Replicache } from 'replicache';
 import { useSubscribe } from 'replicache-react';
 import { nanoid } from 'nanoid';
 import { RealtimeClient } from '@supabase/realtime-js';
+import Audio from '@components/Audio';
 
 export default function Home() {
   const [rep, setRep] = useState<Replicache | null>(null);
@@ -59,6 +60,7 @@ function Chat({ rep }: { rep: Replicache }) {
   };
 
   return (
+    <>
     <div style={styles.container}>
       <form style={styles.form} onSubmit={onSubmit}>
         <input ref={usernameRef} style={styles.username} required />
@@ -68,6 +70,8 @@ function Chat({ rep }: { rep: Replicache }) {
       </form>
       <MessageList messages={messages} />
     </div>
+    <Audio />
+    </>
   );
 }
 
